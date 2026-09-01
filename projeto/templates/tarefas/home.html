@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Tarefas</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="top-bar">
+        <form method="post" action="{% url 'account_logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">Sair</button>
+        </form>
+    </nav>
+
+    <h1>Bem Vindo {{nome}} ! Aqui estão suas tarefas</h1>
+
+    <p class="task-dates">{{concluidas}} de {{total}} tarefas concluídas</p>
+
+    <ul class="task-list">
+        {% for tarefa in tarefas %}
+        <li class="task-card">
+            <div class="task-info">
+                <span class="task-name">{{tarefa.nome}}</span>
+                <span class="task-desc">{{tarefa.descricao}}</span>
+                <span class="task-dates">
+                    Criada em {{tarefa.data_criacao}} · Editada em {{tarefa.data_edicao}}
+                </span>
+            </div>
+            <div class="task-right">
+                {% if tarefa.completo %}
+                <span class="badge complete">Completo</span>
+                {% else %}
+                <span class="badge incomplete">Incompleto</span>
+                {% endif %}
+                <div class="actions">
+                    <a href="{% url 'tarefas:editar' tarefa.id %}" class="btn btn-edit">Editar</a>
+                    <a href="{% url 'tarefas:remover' tarefa.id %}" class="btn btn-delete">Remover</a>
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li class="task-empty">Nenhuma tarefa cadastrada ainda 🎉</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'tarefas:adicionar' %}" class="btn-add">Adicionar Tarefa</a>
+</body>
+
+</html>
